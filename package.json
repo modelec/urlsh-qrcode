@@ -1,0 +1,22 @@
+{
+  "name": "urlsh-api-modelec",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.0.4",
+    "prisma": "^5.8.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "5.8.1"
+  },
+  "scripts": {
+    "dev": "bun run index.ts",
+    "build": "bun build",
+    "prisma:migrate:dev": "bunx prisma migrate dev",
+    "prisma:migrate:generate": "bunx prisma generate",
+    "prisma:studio": "bunx prisma studio"
+  }
+}
