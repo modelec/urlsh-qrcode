@@ -6,7 +6,7 @@ To install dependencies:
 bun install
 ```
   
-fill example.env and rename it to .env
+fill example.env and rename it to .env  
 
 If you want to use database with prisma  
   
