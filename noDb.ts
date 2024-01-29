@@ -1,4 +1,4 @@
-let urlToRedirect = Bun.env.URL_TO_REDIRECT || "https://instagram.com/modelec_isen";
+let urlToRedirect = "https://instagram.com/modelec_isen";
 
 Bun.serve({
     port: Bun.env.PORT || 8080,
