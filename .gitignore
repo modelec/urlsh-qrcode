@@ -175,4 +175,6 @@ dist
 .DS_Store
 
 # prisma
-prisma/**/migration/
+prisma/**/migrations/
+prisma/*.db
+prisma/*-journal
