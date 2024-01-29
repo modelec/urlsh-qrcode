@@ -5,11 +5,16 @@ To install dependencies:
 ```bash
 bun install
 ```
-
-To run:
-
+  
+If you want to use database with prisma  
+  
 ```bash
-bun run index.ts
+bun prisma:migrate:dev
+bun dev:db
 ```
-
-This project was created using `bun init` in bun v1.0.21. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+  
+else 
+  
+```bash
+bun dev
+```
