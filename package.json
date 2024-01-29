@@ -13,8 +13,8 @@
     "@prisma/client": "5.8.1"
   },
   "scripts": {
-    "dev": "bun run index.ts",
-    "build": "bun build",
+    "dev": "bun run noDb.ts",
+    "dev:db": "bun run index.ts",
     "prisma:migrate:dev": "bunx prisma migrate dev",
     "prisma:migrate:generate": "bunx prisma generate",
     "prisma:studio": "bunx prisma studio"

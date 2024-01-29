@@ -5,10 +5,10 @@ Bun.serve({
     port: Bun.env.PORT || 8080,
     async fetch(req) {
         const url = new URL(req.url);
-        if (req.method == "POST" && url.pathname == "/admin") {
+        if (req.method === "POST" && url.pathname === "/admin") {
             if (req.body) {
                 const { urlData, password } = await req.json() as { urlData: string, password: string };
-                if (urlData && password == Bun.env.ADMIN_PASSWORD) {
+                if (urlData && password === Bun.env.ADMIN_PASSWORD) {
                     const u = await prisma.url.create({
                         data: {
                             url: urlData
@@ -21,7 +21,7 @@ Bun.serve({
                 }
             }
         }
-        else if (req.method == "GET") {
+        else if (req.method === "GET") {
             const urlRes = await prisma.url.findFirst({
                 orderBy: {
                     updatedAt: "desc"
