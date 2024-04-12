@@ -6,7 +6,7 @@ Bun.serve({
     async fetch(req) {
         const url = new URL(req.url);
         if (req.method === "POST") {
-            if (url.pathname === "/admin") {
+            if (url.pathname === "/admin/add") {
                 if (req.body) {
                     const { urlData, password } = await req.json() as { urlData: string, password: string };
                     if (urlData && password === Bun.env.ADMIN_PASSWORD) {
