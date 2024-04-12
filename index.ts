@@ -8,15 +8,15 @@ Bun.serve({
         if (req.method === "POST") {
             if (url.pathname === "/admin/add") {
                 if (req.body) {
-                    const { urlData, password } = await req.json() as { urlData: string, password: string };
-                    if (urlData && password === Bun.env.ADMIN_PASSWORD) {
-                        const u = await prisma.url.create({
+                    const { u, password } = await req.json() as { u: string, password: string };
+                    if (u && password === Bun.env.ADMIN_PASSWORD) {
+                        const uu = await prisma.url.create({
                             data: {
-                                url: urlData
+                                url: u
                             }
                         })
 
-                        return new Response(JSON.stringify({body: u}), {
+                        return new Response(JSON.stringify({body: uu}), {
                             status: 200
                         })
                     }
