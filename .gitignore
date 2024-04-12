@@ -178,3 +178,5 @@ dist
 prisma/**/migrations/
 prisma/*.db
 prisma/*-journal
+
+dev.db

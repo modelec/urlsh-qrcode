@@ -1,5 +1,8 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient();
+import { Database } from "bun:sqlite";
+
+const db = new Database(Bun.env.BUN_DB_FILE || "./bun.db");
+
+db.query("CREATE TABLE IF NOT EXISTS Url (url TEXT)").run();
 
 Bun.serve({
     port: Bun.env.PORT || 8080,
@@ -10,13 +13,13 @@ Bun.serve({
                 if (req.body) {
                     const { u, password } = await req.json() as { u: string, password: string };
                     if (u && password === Bun.env.ADMIN_PASSWORD) {
-                        const uu = await prisma.url.create({
-                            data: {
-                                url: u
-                            }
-                        })
+                        const query = db.query("INSERT INTO Url (url) VALUES ($u) RETURNING *");
 
-                        return new Response(JSON.stringify({body: uu}), {
+                        const results = query.get({
+                            $u: u,
+                        });
+
+                        return new Response(JSON.stringify({body: results}), {
                             status: 200
                         })
                     }
@@ -25,7 +28,7 @@ Bun.serve({
                 if (req.body) {
                     const { password } = await req.json() as { password: string };
                     if (password === Bun.env.ADMIN_PASSWORD) {
-                        await prisma.url.deleteMany();
+                        db.query("DELETE FROM Url").run();
                         return new Response(JSON.stringify({body: "ok"}), {
                             status: 200
                         })
@@ -35,7 +38,7 @@ Bun.serve({
                 if (req.body) {
                     const {password} = await req.json() as { password: string };
                     if (password === Bun.env.ADMIN_PASSWORD) {
-                        const urls = await prisma.url.findMany();
+                        const urls = db.query("SELECT * FROM Url").all();
                         return new Response(JSON.stringify({body: urls}), {
                             status: 200
                         })
@@ -45,11 +48,9 @@ Bun.serve({
                 if (req.body) {
                     const { u, password } = await req.json() as { u: string, password: string };
                     if (u && password === Bun.env.ADMIN_PASSWORD) {
-                        await prisma.url.deleteMany({
-                            where: {
-                                url: u
-                            }
-                        })
+                        db.query("DELETE FROM Url WHERE url = $u").run({
+                            $u: u,
+                        });
                         return new Response(JSON.stringify({body: u}), {
                             status: 200
                         })
@@ -59,8 +60,7 @@ Bun.serve({
         }
         else if (req.method === "GET") {
             // random
-            const urls = await prisma.url.findMany();
-
+            const urls = db.query("SELECT * FROM Url").all() as any[];
             const urlRes = urls[Math.floor(Math.random() * urls.length)];
 
             if (urlRes) {
@@ -77,3 +77,7 @@ Bun.serve({
         })
     }
 })
+
+process.on("exit", async () => {
+    db.close();
+});
