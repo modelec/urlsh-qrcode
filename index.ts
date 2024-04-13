@@ -100,6 +100,8 @@ Bun.serve({
             const urlRes = urls[Math.floor(Math.random() * urls.length)];
 
             if (urlRes) {
+                console.log("Redirect to : ", urlRes?.url)
+
                 return new Response(null, {
                     status: 302,
                     headers: {
