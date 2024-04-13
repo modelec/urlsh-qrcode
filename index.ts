@@ -13,6 +13,13 @@ Bun.serve({
                 if (req.body) {
                     const { u, password } = await req.json() as { u: string, password: string };
                     if (u && password === Bun.env.ADMIN_PASSWORD) {
+
+                        if (!isUrl(u)) {
+                            return new Response(JSON.stringify({err: "Invalid URL"}), {
+                                status: 400
+                            });
+                        }
+
                         const query = db.query("INSERT INTO Url (url) VALUES ($u) RETURNING *");
 
                         const results = query.get({
@@ -22,6 +29,10 @@ Bun.serve({
                         return new Response(JSON.stringify({body: results}), {
                             status: 200
                         })
+                    } else {
+                        return new Response(JSON.stringify({err: "Invalid password"}), {
+                            status: 403
+                        });
                     }
                 }
             } else if (url.pathname == "/admin/clear") {
@@ -32,6 +43,10 @@ Bun.serve({
                         return new Response(JSON.stringify({body: "ok"}), {
                             status: 200
                         })
+                    } else {
+                        return new Response(JSON.stringify({err: "Invalid password"}), {
+                            status: 403
+                        });
                     }
                 }
             } else if (url.pathname == "/admin/list") {
@@ -42,18 +57,33 @@ Bun.serve({
                         return new Response(JSON.stringify({body: urls}), {
                             status: 200
                         })
+                    } else {
+                        return new Response(JSON.stringify({err: "Invalid password"}), {
+                            status: 403
+                        });
                     }
                 }
             } else if (url.pathname == "/admin/remove") {
                 if (req.body) {
                     const { u, password } = await req.json() as { u: string, password: string };
                     if (u && password === Bun.env.ADMIN_PASSWORD) {
+
+                        if (!isUrl(u)) {
+                            return new Response(JSON.stringify({err: "Invalid URL"}), {
+                                status: 400
+                            });
+                        }
+
                         db.query("DELETE FROM Url WHERE url = $u").run({
                             $u: u,
                         });
                         return new Response(JSON.stringify({body: u}), {
                             status: 200
                         })
+                    } else {
+                        return new Response(JSON.stringify({err: "Invalid password"}), {
+                            status: 403
+                        });
                     }
                 }
             }
@@ -81,3 +111,14 @@ Bun.serve({
 process.on("exit", async () => {
     db.close();
 });
+
+
+
+const isUrl = (url: string) : boolean => {
+    try {
+        new URL(url);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
